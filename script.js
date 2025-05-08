@@ -387,9 +387,9 @@ const questions = {
   throughClass: {
     title: "What year did we first have class together?",
     options: [
-      { text: "Freshman year", next: "freshmanYear" },
-      { text: "Sophomore year", next: "sophomoreYear" },
-      { text: "Junior year", next: "juniorYear" }
+      { text: "2022-23", next: "freshmanYear" },
+      { text: "2023-24", next: "sophomoreYear" },
+      { text: "2024-25", next: "juniorYear" }
     ]
   },
 
