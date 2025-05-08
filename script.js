@@ -18,6 +18,7 @@ function createTile(char, x, y, isMessageLetter = false) {
 
 function renderFloatingLetters(message) {
   field.innerHTML = '';
+
   const allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ';
   const totalDecoys = 8000;
   const fieldWidth = 4000;
@@ -30,37 +31,60 @@ function renderFloatingLetters(message) {
     createTile(char, x, y);
   }
 
-  const words = message.toUpperCase().replace(/[^A-Z ]/g, '').split(' ');
   const spacing = 30;
-  const maxLineWidth = 10 * spacing;
-  const startX = Math.random() * (fieldWidth - 300);
+  const maxLineWidth = 30 * spacing;
+  const startX = Math.random() * (fieldWidth - maxLineWidth - 100);
   const startY = Math.random() * (fieldHeight - 300);
   let cursorX = startX;
   let cursorY = startY;
-
-  let maxRowWidth = 0;
   let rows = 1;
 
-  words.forEach((word, wordIndex) => {
-    const wordLength = word.length * spacing;
+  let minX = Infinity, maxX = -Infinity;
+  let minY = Infinity, maxY = -Infinity;
+
+  const chars = message.toUpperCase().replace(/[^A-Z0-9 .,!?'"()-]/g, '').split('');
+  let wordBuffer = [];
+
+  const flushWord = () => {
+    wordBuffer.forEach(char => {
+      createTile(char, cursorX, cursorY, true);
+
+      // Update bounding box
+      minX = Math.min(minX, cursorX);
+      maxX = Math.max(maxX, cursorX);
+      minY = Math.min(minY, cursorY);
+      maxY = Math.max(maxY, cursorY);
+
+      cursorX += spacing;
+    });
+    cursorX += spacing;
+    wordBuffer = [];
+  };
+
+  for (let i = 0; i < chars.length; i++) {
+    const char = chars[i];
+    wordBuffer.push(char);
+
+    const nextChar = chars[i + 1];
+    const isWordEnd = char === ' ' || !nextChar || nextChar === ' ';
+
+    const wordLength = wordBuffer.length * spacing + spacing;
+
     if (cursorX + wordLength > startX + maxLineWidth) {
       cursorX = startX;
       cursorY += spacing;
       rows++;
     }
 
-    word.split('').forEach(char => {
-      createTile(char, cursorX, cursorY, true);
-      cursorX += spacing;
-    });
+    if (isWordEnd) flushWord();
+  }
 
-    cursorX += spacing;
+  // Calculate message center from bounding box
+  const centerX = (minX + maxX + spacing) / 2;
+  const centerY = (minY + maxY + spacing) / 2;
 
-    maxRowWidth = Math.max(maxRowWidth, cursorX - startX);
-  });
-
-  field.dataset.messageX = startX + maxRowWidth / 2;
-  field.dataset.messageY = startY + (rows * spacing) / 2;
+  field.dataset.messageX = centerX;
+  field.dataset.messageY = centerY;
 }
 
 document.getElementById('instructions-trigger').addEventListener('click', () => {
@@ -68,17 +92,21 @@ document.getElementById('instructions-trigger').addEventListener('click', () => 
 });
 
 function revealMessage(message) {
-  const messageLetters = message.toUpperCase().replace(/[^A-Z]/g, '').split('');
-  const allTiles = Array.from(document.querySelectorAll('.letter-tile'));
-  allTiles.forEach(tile => tile.classList.remove('reveal'));
+  const messageLetters = message
+    .toUpperCase()
+    .replace(/[^A-Z0-9 .,!?'"()-]/g, '')
+    .split('');
 
-  let msgIndex = 0;
-  for (let tile of allTiles) {
-    if (tile.dataset.message === "true" && tile.textContent === messageLetters[msgIndex]) {
-      tile.classList.add('reveal');
-      msgIndex++;
-      if (msgIndex >= messageLetters.length) break;
-    }
+  const messageTiles = Array.from(document.querySelectorAll('.letter-tile[data-message="true"]'));
+
+  // Clear previous highlights
+  messageTiles.forEach(tile => tile.classList.remove('reveal', 'unlocked-letter'));
+
+  // Highlight message tiles in the order they were created
+  for (let i = 0; i < messageLetters.length && i < messageTiles.length; i++) {
+    const tile = messageTiles[i];
+    tile.classList.add('reveal', 'unlocked-letter');
+    tile.textContent = messageLetters[i]; // ✅ ensure punctuation shows
   }
 
   const messageX = parseFloat(field.dataset.messageX);
@@ -87,7 +115,7 @@ function revealMessage(message) {
   offsetY = container.offsetHeight / 2 - messageY;
   field.style.transition = 'transform 0.6s ease';
   field.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-  setTimeout(() => field.style.transition = '', 600);
+  setTimeout(() => (field.style.transition = ''), 600);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -101,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadMessageButtons() {
-  const { data, error } = await supabase.from('cookies').select('id, password, message, tier');
+  const { data, error } = await supabase.from('cookies').select('id, password, message, tier, created_at');
   if (error) {
     console.error("Failed to load message buttons:", error);
     return;
@@ -124,18 +152,23 @@ async function loadMessageButtons() {
       btn.addEventListener('click', async () => {
         const { data, error } = await supabase
           .from('cookies')
-          .select('message')
+          .select('message, created_at')
           .eq('id', entry.id)
           .single();
-  
+      
         if (error || !data) {
           alert("Error fetching message.");
           return;
         }
-  
+      
         renderFloatingLetters(data.message);
         setTimeout(() => revealMessage(data.message), 0);
-      });
+      
+        // ✅ Use `entry.created_at` not `data.created_at`
+        const timestampEl = document.getElementById('timestamp-display');
+        const date = new Date(entry.created_at);
+        timestampEl.textContent = `${date.toLocaleTimeString()}`;
+      });      
   
       wrapper.appendChild(btn);
       container.appendChild(wrapper);
@@ -163,12 +196,19 @@ async function loadMessageButtons() {
       unlockBtn.style.display = 'inline-block';
 
       input.classList.add('expanded');
+
+      const timestampEl = document.getElementById('timestamp-display');
+      const date = new Date(entry.created_at);
+      timestampEl.textContent = `${date.toLocaleTimeString()}`;
+      console.log('timestamp element:', timestampEl);
+console.log('created_at:', entry.created_at);
+console.log('formatted time:', date.toLocaleTimeString());
     });
   
     unlockBtn.addEventListener('click', async () => {
       const { data, error } = await supabase
         .from('cookies')
-        .select('message, password')
+        .select('message, password, created_at')
         .eq('id', entry.id)
         .single();
   
@@ -183,6 +223,9 @@ async function loadMessageButtons() {
       } else {
         alert("Incorrect password.");
       }
+      const timestampEl = document.getElementById('timestamp-display');
+  const date = new Date(data.created_at);
+  timestampEl.textContent = `${date.toLocaleTimeString()}`;
     });
   
     const formWrapper = document.createElement('div');

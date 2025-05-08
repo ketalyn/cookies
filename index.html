@@ -16,14 +16,14 @@
     </div>   
 
     <div id="main-content">
-
+      <div id="timestamp-display"></div>
       <div id="instructions-popup" class="popup hidden">
         <h3>How to Use This Site</h3>
         <p>Select a message from the list on the left. If it's locked, enter the password to reveal it.</p>
-        <p>Click “Find your message” to help you find your message from Katelyn.</p>
+        <p>Click “Find your message” to find your message from Katelyn and answer the question prompts to unlock messages.</p>
         <p>All passwords are lowercase with no spaces.</p>
         <button onclick="document.getElementById('instructions-popup').classList.add('hidden')">Close</button>
-        
+
       </div> 
       <div id="question-popup" class="popup hidden">
         <h3 id="question-title">When did you meet Katelyn?</h3>
@@ -42,9 +42,6 @@
       <button id="submit-cookie">Submit</button>
     </div>    
 
-<div id="letter-container">
-  <div id="letter-field"></div>
-</div>
   </main>
   <script src="script.js"></script>
 </body>

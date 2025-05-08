@@ -11,6 +11,20 @@ body {
   text-align: center;
 }
 
+#timestamp-display {
+  position: absolute;
+  top: -100;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  padding: 0.5rem 1rem;
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgb(0, 170, 255);
+  z-index: 9999;
+}
+
 #sidebar h3 {
   font-weight: normal;
   color: rgb(0, 170, 255);
@@ -293,6 +307,10 @@ button {
   cursor: pointer;
   font-weight: normal;
 }
+
+/* .unlocked-letter {
+  font-family: 'Myfont-Regular', sans-serif;
+} */
 
 .letter-tile {
   position: absolute;
