@@ -275,7 +275,15 @@ const questions = {
     options: [
       { text: "Before college", next: "beforeCollege" },
       { text: "During college", next: "duringCollege" },
-      { text: "I've never met her", next: "neverMet" }
+      { text: "I've never met her", next: "neverMet" },
+      { text: "Not looking for something personal", next: "unAddressed" }
+    ]
+  },
+
+  unAddressed: {
+    title: "Misc",
+    options: [
+      { text: "Unaddressed Messages", tier: "misc"},
     ]
   },
 
