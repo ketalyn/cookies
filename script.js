@@ -79,7 +79,6 @@ function renderFloatingLetters(message) {
     if (isWordEnd) flushWord();
   }
 
-  // Calculate message center from bounding box
   const centerX = (minX + maxX + spacing) / 2;
   const centerY = (minY + maxY + spacing) / 2;
 
@@ -99,14 +98,12 @@ function revealMessage(message) {
 
   const messageTiles = Array.from(document.querySelectorAll('.letter-tile[data-message="true"]'));
 
-  // Clear previous highlights
   messageTiles.forEach(tile => tile.classList.remove('reveal', 'unlocked-letter'));
 
-  // Highlight message tiles in the order they were created
   for (let i = 0; i < messageLetters.length && i < messageTiles.length; i++) {
     const tile = messageTiles[i];
     tile.classList.add('reveal', 'unlocked-letter');
-    tile.textContent = messageLetters[i]; // ✅ ensure punctuation shows
+    tile.textContent = messageLetters[i];
   }
 
   const messageX = parseFloat(field.dataset.messageX);
@@ -164,7 +161,6 @@ async function loadMessageButtons() {
         renderFloatingLetters(data.message);
         setTimeout(() => revealMessage(data.message), 0);
       
-        // ✅ Use `entry.created_at` not `data.created_at`
         const timestampEl = document.getElementById('timestamp-display');
         const date = new Date(entry.created_at);
         timestampEl.textContent = `${date.toLocaleTimeString()}`;

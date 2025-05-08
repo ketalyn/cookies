@@ -308,10 +308,6 @@ button {
   font-weight: normal;
 }
 
-/* .unlocked-letter {
-  font-family: 'Myfont-Regular', sans-serif;
-} */
-
 .letter-tile {
   position: absolute;
   font-size: 2rem;
