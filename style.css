@@ -14,7 +14,7 @@ body {
 #timestamp-display {
   position: absolute;
   top: -100;
-  left: 50%;
+  left: 52%;
   transform: translateX(-50%);
   background: transparent;
   padding: 0.5rem 1rem;
