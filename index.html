@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>sincerely, Katelyn</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <main>
+    <div id="sidebar">
+      <h3>sincerely, Katelyn</h3>     
+      <button id="instructions-trigger">Instructions</button>
+      <button id="question-trigger">Find your message</button>
+      <div id="message-buttons"></div>
+    </div>   
+
+    <div id="main-content">
+
+      <div id="instructions-popup" class="popup hidden">
+        <h3>How to Use This Site</h3>
+        <p>Select a message from the list on the left. If it's locked, enter the password to reveal it.</p>
+        <p>Click “Find your message” to help you find your message from Katelyn.</p>
+        <p>All passwords are lowercase with no spaces.</p>
+        <button onclick="document.getElementById('instructions-popup').classList.add('hidden')">Close</button>
+        
+      </div> 
+      <div id="question-popup" class="popup hidden">
+        <h3 id="question-title">When did you meet Katelyn?</h3>
+        <div id="question-options"></div>
+      </div>      
+
+      <div id="letter-container">
+        <div id="letter-field"></div>
+      </div>
+    </div>
+    
+    <button id="toggle-form">Leave a message</button>
+    
+    <div id="cookie-form">
+      <textarea id="user-message" placeholder="Type your message..." rows="4"></textarea>
+      <button id="submit-cookie">Submit</button>
+    </div>    
+
+<div id="letter-container">
+  <div id="letter-field"></div>
+</div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

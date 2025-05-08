@@ -1,0 +1,386 @@
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  background: #ffffff;
+  color: #3d3a38;
+  padding: 2rem;
+  text-align: center;
+}
+
+#sidebar h3 {
+  font-weight: normal;
+  color: rgb(0, 170, 255);
+  border-bottom: 1px solid black;
+  height: 40px;
+  margin: 0;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 265px;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #ffffff;
+  padding: 0rem;
+  border-right: 1px solid #000000;
+  z-index: 1000;
+}
+
+#sidebar button {
+  height: 48px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#main-content {
+  margin-left: 240px;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+#instructions-trigger {
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  color: white;
+  font-size: 1rem;
+  font-weight: normal;
+  height: 48px;
+  width: 100%;
+  border: none;
+  background: rgb(0, 170, 255);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid black;
+}
+
+#instructions-trigger:hover {
+  background: black;
+  color: rgb(0, 170, 255);
+}
+
+#instructions-popup button {
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  height: 48px;
+  width: 100%;
+  border: none;
+  background: rgb(0, 170, 255);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  margin-top: 1rem;
+}
+
+#instructions-popup button:hover {
+  background: black;
+  color: white;
+}
+
+#message-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+#message-buttons button {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0rem;
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.locked-msg:hover {
+  background:rgb(0, 170, 255);
+  color: white;
+}
+
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(calc(265px / 2), -50%);
+  background: white;
+  padding: 1.5rem;
+  border: 2px solid #ccc;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+.popup-option {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.6rem;
+  font-size: 1rem;
+  background: white;
+  border: 1px solid black;
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  cursor: pointer;
+  transition: background0.2s ease;
+}
+.popup-option:hover {
+  background: rgb(0, 170, 255);
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.locked-msg.highlight {
+  background-color: rgb(0, 170, 255);
+}
+
+.locked-msg.highlight button {
+  background-color: rgb(0, 170, 255) !important;
+  color: black;
+}
+
+.locked-msg.highlight button:hover {
+  background-color: rgb(0, 170, 255) !important;
+}
+
+.locked-msg {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid black;
+  padding-bottom: 0rem;
+  padding: 0.5rem 0;
+}
+
+.locked-msg:not(:last-child) {
+  border-bottom: 1px solid black;
+}
+
+.lock-btn {
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#question-trigger {
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  color: white;
+  font-size: 2rem;
+  font-weight: normal;
+  height: 48px; 
+  width: 100%;
+  border: none;
+  background: rgb(0, 170, 255);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid black;
+}
+
+#question-trigger:hover {
+  background: black;
+  color: rgb(0, 170, 255);
+}
+
+#message-buttons button:not(.lock-btn):not(.unlock-btn) {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.unlocked-btn {
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  font-size: 1.1rem;
+  font-weight: normal;
+  color: #333;
+  background: transparent;
+  border: none;
+  text-align: center;
+}
+
+.unlocked-btn:hover {
+  background: rgb(0, 170, 255);
+  color: white;
+}
+
+.unlock-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch; 
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.password-input {
+  height: 2.4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 0.9rem;
+  font-size: 1rem;
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  font-weight: normal;
+  line-height: 1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.unlock-btn {
+  height: 2.4rem !important;
+  padding: 0 0.7rem !important;
+  font-size: 1rem;
+  font-weight: normal;
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0, 170, 255) !important;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.password-input.expanded {
+  width: 160px;
+}
+
+#main-content {
+  margin-left: 240px; 
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+textarea {
+  width: 80%;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  font-family: inherit;
+}
+
+button {
+  background:rgb(0, 170, 255);
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  color: black;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.letter-tile {
+  position: absolute;
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgb(143, 143, 143);
+  opacity: 0.2;
+  user-select: none;
+  white-space: nowrap;     
+  overflow: visible;        
+  line-height: 1;          
+  text-align: center;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.letter-tile.reveal {
+  color: rgb(0, 170, 255);
+  opacity: 1;
+}
+
+#letter-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  cursor:grab;
+}
+#letter-field {
+  position: absolute;
+  width: 4000px;
+  height: 4000px;
+  cursor:grab;
+}
+
+#letter-container.dragging,
+#letter-field.dragging {
+  cursor: grabbing;
+}
+
+#toggle-form {
+  position: fixed; 
+  bottom: 20px;   
+  right: 20px;   
+  z-index: 1100;
+  font-family: 'Arial Narrow', cursive, sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  height: 48px;
+  width: 250px;  
+  border: 1px solid black;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#toggle-form:hover {
+  background: rgb(0, 170, 255);
+  color: white;
+}
+
+#cookie-form {
+  display: none;
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px;
+  z-index: 1100;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+#letter-container.dragging,
+#letter-field.dragging {
+  cursor: grabbing;
+}
+
+#form-container {
+  position: fixed;
+  bottom: 0;
+  left: 250px;
+  background: #fff;
+  padding: 1rem;
+  width: 250px;
+  box-sizing: border-box;
+  border-top: 1px solid #ccc;
+}
+
